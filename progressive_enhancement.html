@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="lib/build/reset-fonts-grids/reset-fonts-grids.css">
 	<style>
 	.hide, ul.table-of-contents-links, .table-of-contents h3{ display:none; }
-	.slideshow{ text-align:center; width:100%; height:100%; }
+	.slideshow{ text-align:center; width:100%; height:100%; padding:10px; }
 	</style>
 	<script src="lib/build/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -42,23 +42,23 @@
 		</div>
 		<div class="slide" id="Slide3">
 			<h3>What you get for free</h3>
-			<ul>
-				<li>Compatibility with <strong>everything</strong> that supports HTML</li>
+			<ul class="steps">
+				<li class="transition:show">Compatibility with <strong>everything</strong> that supports HTML</li>
 				<li>Your code will make more sense to more people</li>
 				<li>Better compatibility with future platforms</li>
 			</ul>
 		</div>
 		<div class="slide" id="Slide4">
 			<h3>Freedom to move ahead</h3>
-			<ul>
-				<li>Not much has changed much in JavaScript or HTML since 1999</li>
+			<ul class="steps">
+				<li class="transition:show">Not much has changed much in JavaScript or HTML since 1999</li>
 				<li>Fear of "breaking the web" is a top reason</li>
 				<li>This does not need to be an issue</li>
 			</ul>
 		</div>
 		<div class="slide" id="Slide5">
 			<h3>It's not more work, it's a different way of looking at your development</h3>
-			<ul>
+			<ul class="steps">
 				<li>Strip down the metaphors. Do you remember the Nob control?</li>
 				<li>What is the standard HTML supported way of accomplishing the same goal</li>
 				<li><strong>Question:</strong> What is the standard HTML supported way of accomplishing the drag and drop interface in Basecamp?</li>
@@ -66,7 +66,7 @@
 		</div>
 		<div class="slide" id="Slide6">
 			<h3>Where does Ruby on Rails come in?</h3>
-			<ul>
+			<ul class="steps">
 				<li>Simplicity of creating HTML and JSON views from one controller?</li>
 				<li>Adherence to REST interfaces</li>
 				<li>Forward thinking developers</li>
@@ -75,7 +75,7 @@
 		</div>
 		<div class="slide" id="Slide7">
 			<h3>There are lots of different ways to do this</h3>
-			<ul>
+			<ul class="steps">
 				<li>Some sites can totally degrade and some cannot</li>
 				<li>Some features are not needed at all. Curves maybe?</li>
 				<li>Information sites should make all information available to every user</li>
@@ -104,6 +104,7 @@
 				//Static
 				S.CLASS_SLIDE = "slide"
 				S.CLASS_HIDE = "hide"
+				S.CLASS_STEPS = "steps"
 				
 				//Public
 				var public_methods = {
@@ -111,6 +112,18 @@
 					el : Dom.get( containerId ),
 					
 					selectedSlide : null,
+					
+					steps : null,
+					
+					transitions : {
+						
+						show : function( element ){
+							
+							Dom.removeClass( element, S.CLASS_HIDE );
+							
+						}
+						
+					},
 					
 					getSlides : function(){
 						
@@ -145,6 +158,49 @@
 							return false;
 							
 						}
+						
+					},
+					
+					getSteps : function( slideId ){
+						
+						var	steps = Dom.getElementsByClassName( 
+									S.CLASS_STEPS, 
+									"ul", 
+									Dom.get( slideId ) 
+								)[ 0 ].getElementsByTagName( "li" ),
+						
+								getTransitions = function( element ){
+									
+									var	classes = element.className.split(" ")
+											transitions = [];
+									
+									for( var i=0, l=classes.length; l > i; i++ ){
+										var classArray = classes[ i ].split( ":" );
+										
+										if( classArray.length > 1 && classArray[0] === "transition" ){
+											
+											transitions.push( classArray[ 1 ] );
+											
+										}
+										
+									}
+									
+									return transitions;
+									
+								};
+						
+						this.steps = [];
+						
+						for( var i = 0, l = steps.length; l > i; i++ ){
+							
+							this.steps.push({
+								element : steps[ i ],
+								transition : getTransitions( steps[ i ] )
+							})
+							
+						}
+						
+						return this.steps;
 						
 					}
 					
