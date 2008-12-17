@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Progressive Enhancement</title>
+	<link rel="stylesheet" type="text/css" href="lib/build/reset-fonts-grids/reset-fonts-grids.css">
+	<style>
+	.hide, ul.table-of-contents-links, .table-of-contents h3{ display:none; }
+	.slideshow{ text-align:center; width:100%; height:100%; }
+	</style>
+	<script src="lib/build/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div class="faq slideshow" id="mySlideshow">
+		<div class="table-of-contents slide">
+			<h1>Progressive Enhancement</h1>
+			<h2>October 2008 LA Ruby User Group</h2>
+
+			<h3>Table of Contents</h3>
+			<ul class="table-of-contents-links">
+				<li><a href="#Slide1">What is Progressive Enhancement?</a></li>
+				<li><a href="#Slide2">Why should I?</a></li>
+				<li><a href="#Slide3">What you get for free</a></li>
+				<li><a href="#Slide4">Freedom to move ahead</a></li>
+				<li><a href="#Slide5">It's not more work, it's a different way of looking at your development</a></li>
+				<li><a href="#Slide6">Where does Ruby on Rails come in?</a></li>
+				<li><a href="#Slide7">There are lots of different ways to do this</a></li>
+				<li><a href="#Slide8">Will they blend?</a></li>
+			</ul>
+		</div>
+		<div class="slide" id="Slide1">
+			<h3>What is Progressive Enhancement?</h3>
+			<ul class="steps">
+				<li class="transition:drop">"Progressive enhancement is a strategy for web design that emphasizes accessibility, semantic markup, and external style-sheet and scripting technologies." <cite>Wikipedia</cite></li>
+				<li>Coined by Steven Champeon for Webmonkey and the SXSW Interactive conference in 2003 <cite>Wikipedia</cite></li>
+			</ul>
+		</div>
+		<div class="slide" id="Slide2">
+			<h3>Why should I?</h3>
+		</div>
+		<div class="slide" id="Slide3">
+			<h3>What you get for free</h3>
+			<ul>
+				<li>Compatibility with <strong>everything</strong> that supports HTML</li>
+				<li>Your code will make more sense to more people</li>
+				<li>Better compatibility with future platforms</li>
+			</ul>
+		</div>
+		<div class="slide" id="Slide4">
+			<h3>Freedom to move ahead</h3>
+			<ul>
+				<li>Not much has changed much in JavaScript or HTML since 1999</li>
+				<li>Fear of "breaking the web" is a top reason</li>
+				<li>This does not need to be an issue</li>
+			</ul>
+		</div>
+		<div class="slide" id="Slide5">
+			<h3>It's not more work, it's a different way of looking at your development</h3>
+			<ul>
+				<li>Strip down the metaphors. Do you remember the Nob control?</li>
+				<li>What is the standard HTML supported way of accomplishing the same goal</li>
+				<li><strong>Question:</strong> What is the standard HTML supported way of accomplishing the drag and drop interface in Basecamp?</li>
+			</ul>
+		</div>
+		<div class="slide" id="Slide6">
+			<h3>Where does Ruby on Rails come in?</h3>
+			<ul>
+				<li>Simplicity of creating HTML and JSON views from one controller?</li>
+				<li>Adherence to REST interfaces</li>
+				<li>Forward thinking developers</li>
+				<li><strong>Question:</strong> Anything else?</li>
+			</ul>
+		</div>
+		<div class="slide" id="Slide7">
+			<h3>There are lots of different ways to do this</h3>
+			<ul>
+				<li>Some sites can totally degrade and some cannot</li>
+				<li>Some features are not needed at all. Curves maybe?</li>
+				<li>Information sites should make all information available to every user</li>
+				<li>Web Apps should make sure that there is at least end to end functionality</li>
+			</ul>
+		</div>
+		<div class="slide" id="Slide8">
+			<h3>Will they blend?</h3>
+			<img src="img/willitblend.jpg">
+		</div>
+	</div>
+	<script>
+		(function(){
+			
+			var Dom = YAHOO.util.Dom,
+			Event = YAHOO.util.Event,
+			byClass = Dom.getElementsByClassName;
+
+			window.STAPX = {};
+			STAPX.widgets = {};
+			STAPX.widgets.Slides = function( containerId, config ) {
+				
+				//Private
+				var S = STAPX.widgets.Slides;
+				
+				//Static
+				S.CLASS_SLIDE = "slide"
+				S.CLASS_HIDE = "hide"
+				
+				//Public
+				var public_methods = {
+					
+					el : Dom.get( containerId ),
+					
+					selectedSlide : null,
+					
+					getSlides : function(){
+						
+						return byClass( S.CLASS_SLIDE, "div", this.el );
+						
+					},
+					
+					getPreviousSlide : function(){
+					
+						return Dom.getPreviousSibling( this.selectedSlide );
+						
+					},
+					
+					getNextSlide : function(){
+					
+						return Dom.getNextSibling( this.selectedSlide );
+						
+					},
+					
+					selectSlide : function( slideId ){
+						
+						if( slideId ){
+						
+							Dom.addClass( this.getSlides(), S.CLASS_HIDE );
+							Dom.removeClass( slideId, S.CLASS_HIDE );
+
+							this.selectedSlide = Dom.get( slideId );
+							return this.selectedSlide;
+							
+						} else {
+							
+							return false;
+							
+						}
+						
+					}
+					
+				}
+				
+				//Initialize
+				public_methods.selectSlide( public_methods.getSlides()[ 0 ] );
+				Event.on( public_methods.el, "click", function( event ){
+					
+					if( event.shiftKey ){
+						
+						this.selectSlide( this.getPreviousSlide() );
+						
+					} else {
+					
+						this.selectSlide( this.getNextSlide() );
+						
+					}
+					
+				}, null, public_methods )
+				
+				return public_methods;
+				
+			}
+			
+			STAPX.app = {};
+			STAPX.app.slideshow = new STAPX.widgets.Slides( "mySlideshow" );
+			
+		})();
+	</script>
+</body>
+</html>
