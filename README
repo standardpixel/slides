@@ -8,3 +8,7 @@ Contact: info@standardpixel.com
  
 ** Summary **
 StandardPixel Slides is web-based presentation software. Slides is open source and adheres strictly to stable web standards to allow it to be flexible enough to work on any platform.
+
+** Status **
+
+This is an early stage of development. At the moment I am using the full checkout of YUI as I decide what will be needed. Also, all of the JS and Style is in the progressive_enhancement.html file, which is sort of a test case of a presentation on... you guessed it Progressive Enhancement. Ultimately there will be external js and css.
